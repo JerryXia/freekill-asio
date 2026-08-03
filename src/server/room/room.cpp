@@ -226,6 +226,18 @@ void Room::addPlayer(ServerPlayer &player) {
     }));
   }
 
+  for (auto connId : observers) {
+    auto p = um.findPlayerByConnId(connId).lock();
+    if (!p) continue; // FIXME: 应当是出大问题了
+    player.doNotify("AddObserver", Cbor::encodeArray({
+      p->getId(),
+      p->getScreenName(),
+      p->getAvatar(),
+      false,
+      p->getTotalGameTime(),
+    }));
+  }
+
   if (m_owner_conn_id == 0) {
     setOwner(player);
   }

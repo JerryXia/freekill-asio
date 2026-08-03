@@ -440,7 +440,7 @@ void Room::addObserver(ServerPlayer &player) {
     if (serialized && serialized_size > 0) {
       auto buf = Cbor::encodeArray({ (int)capacity, timeout });
       buf.data()[0] += 1;
-      player.doNotify("EnterRoom", buf + std::string_view((char*)serialized, serialized_size));
+      player.doNotify("EnterRoom", buf + std::string((char*)serialized, serialized_size));
       free(serialized);
     }
 

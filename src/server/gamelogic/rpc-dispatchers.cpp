@@ -901,6 +901,13 @@ static _rpcRet _rpc_RoomThread_getRoom(const JsonRpcPacket &packet) {
   }
   j["players"] = players;
 
+  auto observers = json::array();
+  for (auto pid : room->getObservers()) {
+    auto p = um.findPlayerByConnId(pid).lock();
+    if (p) players.push_back( RpcDispatchers::getPlayerObject(*p) );
+  }
+  j["observers"] = observers;
+
   auto bin = json::to_cbor(j);
   return { true, std::string(bin.begin(), bin.end()) };
 }

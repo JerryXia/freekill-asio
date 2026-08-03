@@ -407,12 +407,12 @@ void Room::addObserver(ServerPlayer &player) {
       auto p = um.findPlayerByConnId(connId).lock();
       if (!p) continue;
       auto entry = cbor_new_definite_array(6);
-      [[maybe_unused]] auto ok1 = cbor_array_push(entry, make_cbor_int(p->getId()));
-      [[maybe_unused]] auto ok2 = cbor_array_push(entry, cbor_build_string(p->getScreenName().c_str()));
-      [[maybe_unused]] auto ok3 = cbor_array_push(entry, cbor_build_string(p->getAvatar().c_str()));
-      [[maybe_unused]] auto ok4 = cbor_array_push(entry, cbor_build_bool(p->isReady()));
-      [[maybe_unused]] auto ok5 = cbor_array_push(entry, make_cbor_int(p->getTotalGameTime()));
-      [[maybe_unused]] auto ok6 = cbor_array_push(entry, cbor_build_bool(p->getConnId() == m_owner_conn_id));
+      [[maybe_unused]] auto ok1 = cbor_array_push(entry, cbor_move(make_cbor_int(p->getId())));
+      [[maybe_unused]] auto ok2 = cbor_array_push(entry, cbor_move(cbor_build_string(p->getScreenName().c_str())));
+      [[maybe_unused]] auto ok3 = cbor_array_push(entry, cbor_move(cbor_build_string(p->getAvatar().c_str())));
+      [[maybe_unused]] auto ok4 = cbor_array_push(entry, cbor_move(cbor_build_bool(p->isReady())));
+      [[maybe_unused]] auto ok5 = cbor_array_push(entry, cbor_move(make_cbor_int(p->getTotalGameTime())));
+      [[maybe_unused]] auto ok6 = cbor_array_push(entry, cbor_move(cbor_build_bool(p->getConnId() == m_owner_conn_id)));
       [[maybe_unused]] auto ok7 = cbor_array_push(player_arr, cbor_move(entry));
     }
 
@@ -421,17 +421,17 @@ void Room::addObserver(ServerPlayer &player) {
       auto p = um.findPlayerByConnId(connId).lock();
       if (!p) continue;
       auto entry = cbor_new_definite_array(5);
-      [[maybe_unused]] auto ok1 = cbor_array_push(entry, make_cbor_int(p->getId()));
-      [[maybe_unused]] auto ok2 = cbor_array_push(entry, cbor_build_string(p->getScreenName().c_str()));
-      [[maybe_unused]] auto ok3 = cbor_array_push(entry, cbor_build_string(p->getAvatar().c_str()));
-      [[maybe_unused]] auto ok4 = cbor_array_push(entry, cbor_build_bool(false));
-      [[maybe_unused]] auto ok5 = cbor_array_push(entry, make_cbor_int(p->getTotalGameTime()));
+      [[maybe_unused]] auto ok1 = cbor_array_push(entry, cbor_move(make_cbor_int(p->getId())));
+      [[maybe_unused]] auto ok2 = cbor_array_push(entry, cbor_move(cbor_build_string(p->getScreenName().c_str())));
+      [[maybe_unused]] auto ok3 = cbor_array_push(entry, cbor_move(cbor_build_string(p->getAvatar().c_str())));
+      [[maybe_unused]] auto ok4 = cbor_array_push(entry, cbor_move(cbor_build_bool(false)));
+      [[maybe_unused]] auto ok5 = cbor_array_push(entry, cbor_move(make_cbor_int(p->getTotalGameTime())));
       [[maybe_unused]] auto ok6 = cbor_array_push(observer_arr, cbor_move(entry));
     }
 
-    [[maybe_unused]] auto ok_1 = cbor_map_add(new_map, { cbor_build_string("isObserver"), cbor_build_bool(true) });
-    [[maybe_unused]] auto ok_2 = cbor_map_add(new_map, { cbor_build_string("_players"), cbor_move(player_arr) });
-    [[maybe_unused]] auto ok_3 = cbor_map_add(new_map, { cbor_build_string("_observers"), cbor_move(observer_arr) });
+    [[maybe_unused]] auto ok_1 = cbor_map_add(new_map, { cbor_move(cbor_build_string("isObserver")), cbor_move(cbor_build_bool(true)) });
+    [[maybe_unused]] auto ok_2 = cbor_map_add(new_map, { cbor_move(cbor_build_string("_players")), cbor_move(player_arr) });
+    [[maybe_unused]] auto ok_3 = cbor_map_add(new_map, { cbor_move(cbor_build_string("_observers")), cbor_move(observer_arr) });
 
     unsigned char *serialized = NULL;
     size_t serialized_size = 0;
@@ -792,7 +792,7 @@ void Room::_gameOver() {
 void Room::detectSameIpAndDevice() {
   auto &um = Server::instance().user_manager();
 
-  std::unordered_map<std::string_view, std::vector<std::string_view>> uuidList, ipList;
+  std::unordered_map<std::string, std::vector<std::string>> uuidList, ipList;
   for (auto pConnId : players) {
     auto p = um.findPlayerByConnId(pConnId).lock();
     if (!p) continue;
@@ -801,9 +801,9 @@ void Room::detectSameIpAndDevice() {
     p->startGameTimer();
 
     if (!p->isOnline()) continue;
-    auto uuid = p->getUuid();
-    auto ip = p->getRouter().getSocket()->peerAddress();
-    auto pname = p->getScreenName();
+    auto uuid = std::string(p->getUuid());
+    auto ip = std::string(p->getRouter().getSocket()->peerAddress());
+    auto pname = std::string(p->getScreenName());
     if (!uuid.empty()) {
       uuidList[uuid].push_back(pname);
     }
@@ -812,7 +812,7 @@ void Room::detectSameIpAndDevice() {
     }
   }
 
-  static auto join = [](const std::vector<std::string_view>& vec, const std::string_view &spliter) {
+  static auto join = [](const std::vector<std::string>& vec, const std::string_view &spliter) {
     std::string result;
     for (size_t i = 0; i < vec.size(); ++i) {
       if (i != 0) result += spliter;

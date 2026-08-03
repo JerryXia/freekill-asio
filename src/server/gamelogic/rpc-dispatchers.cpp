@@ -904,7 +904,7 @@ static _rpcRet _rpc_RoomThread_getRoom(const JsonRpcPacket &packet) {
   auto observers = json::array();
   for (auto pid : room->getObservers()) {
     auto p = um.findPlayerByConnId(pid).lock();
-    if (p) players.push_back( RpcDispatchers::getPlayerObject(*p) );
+    if (p) observers.push_back( RpcDispatchers::getPlayerObject(*p) );
   }
   j["observers"] = observers;
 

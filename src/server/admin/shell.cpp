@@ -291,7 +291,7 @@ void Shell::msgRoomCommand(StringList &list) {
     msg += list[i];
     msg += ' ';
   }
-  room->doBroadcastNotify(room->getPlayers(), "ServerMessage", msg);
+  room->broadcast("ServerMessage", msg);
 }
 
 static void banAccount(Sqlite3 &db, const std::string_view &name, bool banned) {

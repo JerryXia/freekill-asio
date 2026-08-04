@@ -394,7 +394,7 @@ void Server::_refreshMd5() {
         "\x4D" "#RoomOutdated"      // value(0) : bytes(13)
         "\x45" "toast"              // key(1) : bytes(5)
         "\xF5"sv;                   // value(1): true
-      room->doBroadcastNotify(room->getPlayers(), "GameLog", log);
+      room->broadcast("GameLog", log);
     }
   }
 

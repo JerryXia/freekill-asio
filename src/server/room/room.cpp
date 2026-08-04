@@ -897,7 +897,7 @@ bool Room::isRejected(ServerPlayer &player) const {
 
 void Room::setPlayerReady(ServerPlayer &p, bool ready) {
   p.setReady(ready);
-  doBroadcastNotify(players, "ReadyChanged", Cbor::encodeArray({ p.getId(), ready }));
+  broadcast("ReadyChanged", Cbor::encodeArray({ p.getId(), ready }));
 }
 
 // ------------------------------------------------

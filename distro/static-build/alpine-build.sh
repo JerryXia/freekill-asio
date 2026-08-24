@@ -183,7 +183,7 @@ gcc src/lua_patched.c -o lua \
 if [ ! -d "$ROOT_DIR/freekill-asio" ]; then
   echo '[+] 克隆 freekill-asio'
   cd "$ROOT_DIR"
-  git clone https://codeberg.org/Qsgs-Fans/freekill-asio
+  git clone https://github.com/Qsgs-Fans/freekill-asio
 else
   echo '[+] 更新 freekill-asio'
   cd "$ROOT_DIR"/freekill-asio

@@ -24,3 +24,8 @@
 /freekill.*log
 /flist.txt
 /server-list.json
+
+# Claude Code
+/docs/
+CLAUDE.md
+.claude/

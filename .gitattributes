@@ -1,0 +1,30 @@
+# Line ending normalization.
+#
+# This is a Linux-only project: enforce LF in the repository and in the
+# working tree so that Windows checkouts don't end up with CRLF.
+#
+# `text=auto` lets git auto-detect text vs. binary and normalizes CRLF -> LF
+# on commit. `eol=lf` keeps the working tree on LF even on Windows.
+# Together this makes line-ending differences across systems a non-issue.
+* text=auto eol=lf
+
+# Explicitly mark common binary types so they are never normalized.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.bmp  binary
+*.so   binary
+*.a    binary
+*.o    binary
+*.dll  binary
+*.exe  binary
+*.zip  binary
+*.gz   binary
+*.tar  binary
+*.7z   binary
+*.db   binary
+*.sqlite binary
+*.pdf  binary
